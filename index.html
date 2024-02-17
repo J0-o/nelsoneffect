@@ -2,36 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Nelson Effect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Scrolling Images</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: black;
+            margin: 0;
+            padding: 0;
         }
-        h1 {
-            color: #333;
+
+        #image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        ul {
-            list-style-type: none;
-        }
-        li {
+
+        .image-wrapper {
+            width: 100%;
             margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
         }
+
+        .image-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+            pointer-events: none;
+        }
+
+        .image {
+            width: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .description-box {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: rgba(0, 0, 0, 0.7);
+			color: white;
+			padding: 10px;
+			text-align: justify;
+			font-family: sans-serif;
+			font-size: 18px; /* Adjust the size as needed */
+		}
+
+
     </style>
 </head>
 <body>
-    <h1>The Nelson Effect</h1>
-    <ul>
-        <li><strong>Nelson Mandela's Death:</strong> Many people remember Nelson Mandela dying in prison in the 1980s, but he actually passed away in 2013.</li>
-        <li><strong>Berenstain Bears:</strong> Some remember the children's book series as "Berenstein Bears," but it has always been spelled "Berenstain Bears."</li>
-        <li><strong>Monopoly Man's Monocle:</strong> Many recall the Monopoly mascot having a monocle, but he never did.</li>
-        <li><strong>Oscar Mayer:</strong> Some remember the brand name as "Oscar Meyer," but it's actually "Oscar Mayer."</li>
-        <li><strong>Fruit of the Loom Logo:</strong> People recall a cornucopia in the logo, but it has never been there.</li>
-        <li><strong>Febreze:</strong> Many remember the air freshener brand spelled as "Febreeze," but it's "Febreze."</li>
-        <li><strong>Looney Tunes:</strong> Some remember it as "Looney Toons," but it's actually "Looney Tunes."</li>
-        <li><strong>KitKat:</strong> Many recall a dash in the name (Kit-Kat), but there has never been one.</li>
-        <li><strong>Curious George's Tail:</strong> People remember the character having a tail, but he does not.</li>
-        <li><strong>We Are the Champions:</strong> Some remember the song ending with "of the world," but that's not part of the studio version.</li>
-    </ul>
+    <div id="image-container"></div>
+    <div class="description-box">
+        The Nelson effect is, depending on who you ask, either a weird phenomenon where large groups of people misremember the exact same given thing in the exact same way, or the pseudoscientific belief that some differences between one's memories and the real world are caused by changes to past events in the timeline. Many proponents of the latter believe that the Mandela effect is caused by unspecified persons accidental traveling between alternate universes, although some others propose that history has been deliberately altered after the fact — by malicious extradimensional beings within the same timeline, or by experiments at CERN.
+    </div>
+    <script>
+        const imageContainer = document.getElementById('image-container');
+        let imageIndex = 1;
+        const totalImages = 10; // Set this to the total number of images in your /img/ folder
+
+        // Function to load images
+        function loadImages() {
+            for (let i = 0; i < 5; i++) { // Load 5 images at a time
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('image-wrapper');
+
+                const img = document.createElement('img');
+                img.src = `img/${imageIndex}.jpg`; // Set the path to your local /img/ folder
+                img.classList.add('image');
+
+                wrapper.appendChild(img);
+                imageContainer.appendChild(wrapper);
+                imageIndex = (imageIndex % totalImages) + 1;
+            }
+        }
+
+        // Initial load
+        loadImages();
+
+        // Auto-scroll logic
+        function autoScroll() {
+            window.scrollBy(0, 1);
+            if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 100) {
+                loadImages();
+            }
+            requestAnimationFrame(autoScroll);
+        }
+
+        autoScroll();
+    </script>
 </body>
 </html>
